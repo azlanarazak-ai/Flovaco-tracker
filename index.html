@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flovaco Sdn Bhd Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f9fc;
+    --surface:#ffffff;
+    --ink:#0f2440;
+    --ink-soft:#5b7292;
+    --line:#e3eaf3;
+    --accent:#1f5fbf;
+    --accent-deep:#123c80;
+    --accent-soft:#e8f0fb;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(15,36,64,.05),0 8px 24px rgba(15,36,64,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* Theme variants */
+  body.theme-midnight{
+    --bg:#0d1626; --surface:#16223a; --ink:#e8eefb; --ink-soft:#93a5c4;
+    --line:#25344f; --accent:#5b9bf0; --accent-deep:#9cc4f7; --accent-soft:#1d2c48;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  }
+  body.theme-sand{
+    --bg:#faf7f2; --surface:#ffffff; --ink:#2c2a26; --ink-soft:#7a7367;
+    --line:#ece6db; --accent:#0e7490; --accent-deep:#0a5468; --accent-soft:#e3f2f6;
+  }
+  body.dense .section{padding:20px 24px}
+  body.dense .card{padding:14px 16px}
+  body.dense .stage-row{padding:10px 14px}
+  body.serif{font-family:Georgia,'Times New Roman',serif}
+  body.serif h1,body.serif h2,body.serif .btn{font-family:'Fraunces',Georgia,serif}
+
+  /* Header */
+  header{
+    background:linear-gradient(135deg,var(--accent-deep),var(--accent));
+    color:#fff;padding:34px 0 30px;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand-mark{
+    width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.16);
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    border:1px solid rgba(255,255,255,.3);
+  }
+  h1{font-family:'Fraunces',serif;font-size:24px;font-weight:600;letter-spacing:.3px}
+  .tagline{font-size:13px;opacity:.85;margin-top:2px}
+
+  main{max-width:960px;margin:0 auto;padding:28px 24px 64px}
+
+  /* Sections */
+  .section{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:26px 28px;margin-bottom:26px;
+  }
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;gap:12px;flex-wrap:wrap}
+  .kicker{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent)}
+  h2{font-family:'Fraunces',serif;font-size:19px;font-weight:600}
+  .muted{color:var(--ink-soft);font-size:13.5px;margin-bottom:18px}
+
+  /* Buttons */
+  .btn{
+    font:inherit;font-size:13.5px;font-weight:600;border-radius:9px;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);
+    padding:8px 14px;transition:all .15s ease;
+  }
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-deep);border-color:var(--accent-deep);color:#fff}
+  .btn-danger{color:#b23b3b}
+  .btn-danger:hover{border-color:#b23b3b;color:#b23b3b;background:#fdf1f1}
+  body.theme-midnight .btn-danger{color:#f08a8a}
+  body.theme-midnight .btn-danger:hover{background:#3a2226;border-color:#f08a8a}
+  .btn-sm{padding:5px 10px;font-size:12.5px;border-radius:7px}
+
+  /* Project cards */
+  .project-list{display:flex;flex-direction:column;gap:12px}
+  .card{
+    border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+    display:flex;align-items:flex-start;gap:14px;transition:all .15s ease;cursor:pointer;
+    background:var(--surface);
+  }
+  .card:hover{border-color:var(--accent)}
+  .card.selected{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+  .card-body{flex:1;min-width:0}
+  .card-title{font-weight:600;font-size:15px}
+  .card-loc{font-size:13px;color:var(--ink-soft);margin-top:1px}
+  .card-notes{font-size:13px;color:var(--ink-soft);margin-top:6px}
+  .card-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+  .badge{
+    display:inline-block;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:99px;
+    background:var(--accent-soft);color:var(--accent-deep);white-space:nowrap;margin-top:6px;
+  }
+  body.theme-midnight .badge{color:var(--accent-deep)}
+
+  /* Stage tracker */
+  .tracker-title{
+    font-size:13px;color:var(--ink-soft);margin-bottom:14px;
+  }
+  .tracker-title strong{color:var(--ink);font-size:15px}
+  .stages{display:flex;flex-direction:column;gap:0}
+  .stage-row{
+    display:flex;align-items:center;gap:14px;padding:12px 16px;
+    border-left:3px solid var(--line);margin-left:12px;
+  }
+  .stage-dot{
+    width:30px;height:30px;border-radius:50%;flex-shrink:0;
+    background:var(--surface);border:2px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;color:var(--ink-soft);margin-left:-30px;
+  }
+  .stage-name{font-weight:600;font-size:14px}
+  .stage-desc{font-size:12.5px;color:var(--ink-soft)}
+  .stage-done .stage-dot{background:var(--accent);border-color:var(--accent);color:#fff}
+  .stage-done .stage-name{color:var(--ink)}
+  .stage-current{
+    border-left-color:var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;
+  }
+  .stage-current .stage-dot{
+    background:var(--accent-deep);border-color:var(--accent-deep);color:#fff;
+    box-shadow:0 0 0 4px var(--accent-soft);
+  }
+  .stage-current .stage-name::after{
+    content:"Current";font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+    background:var(--accent);color:#fff;border-radius:99px;padding:2px 8px;margin-left:10px;vertical-align:2px;
+  }
+  .tracker-controls{display:flex;gap:10px;margin-top:18px;align-items:center;flex-wrap:wrap}
+  .stage-hint{font-size:12.5px;color:var(--ink-soft)}
+
+  /* Settings */
+  .settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+  .setting-block{border:1px solid var(--line);border-radius:12px;padding:16px}
+  .setting-block h3{font-size:13px;font-weight:700;margin-bottom:10px}
+  .setting-block label{
+    display:flex;align-items:center;gap:9px;font-size:13.5px;padding:6px 0;cursor:pointer;color:var(--ink)
+  }
+  .swatches{display:flex;gap:8px;margin-top:4px}
+  .swatch{
+    width:34px;height:34px;border-radius:10px;cursor:pointer;border:2px solid transparent;
+    transition:all .15s ease;
+  }
+  .swatch.active{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .swatch-light{background:linear-gradient(135deg,#fff 55%,#dbe7f7)}
+  .swatch-midnight{background:linear-gradient(135deg,#16223a 55%,#1f5fbf)}
+  .swatch-sand{background:linear-gradient(135deg,#faf7f2 55%,#0e7490)}
+
+  /* Modal */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(15,36,64,.45);backdrop-filter:blur(2px);
+    display:none;align-items:center;justify-content:center;padding:20px;z-index:50;
+  }
+  .modal-overlay.open{display:flex}
+  .modal{
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    width:100%;max-width:440px;padding:26px 28px;box-shadow:0 24px 64px rgba(15,36,64,.25);
+  }
+  .modal h2{margin-bottom:4px}
+  .field{margin-top:14px}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:5px}
+  .field input,.field textarea,.field select{
+    font:inherit;font-size:14px;width:100%;padding:9px 12px;border-radius:9px;
+    border:1px solid var(--line);background:var(--bg);color:var(--ink);
+  }
+  .field input:focus,.field textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .field textarea{resize:vertical;min-height:64px}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:99px;
+    font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:all .25s ease;z-index:60;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .empty{font-size:13.5px;color:var(--ink-soft);text-align:center;padding:20px;border:1px dashed var(--line);border-radius:10px}
+
+  @media (max-width:600px){
+    .card{flex-direction:column}
+    .card-actions{width:100%;justify-content:flex-end}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap brand">
+    <div class="brand-mark">💧</div>
+    <div>
+      <h1>Flovaco Sdn Bhd Tracker</h1>
+      <div class="tagline">Water project delivery tracker · Malaysia</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- 1. PROJECT LIST -->
+  <section class="section" id="section-list">
+    <div class="section-head">
+      <div>
+        <div class="kicker">Portfolio</div>
+        <h2>Project List</h2>
+      </div>
+      <button class="btn btn-primary" id="btn-add">+ Add Project</button>
+    </div>
+    <p class="muted">All water projects at a glance. Click a project to select it for the stage tracker below.</p>
+    <div class="project-list" id="project-list"></div>
+  </section>
+
+  <!-- 2. STAGE TRACKER -->
+  <section class="section" id="section-tracker">
+    <div class="section-head">
+      <div>
+        <div class="kicker">Delivery</div>
+        <h2>Stage Tracker</h2>
+      </div>
+    </div>
+    <p class="muted">Follow the selected project from start to finish, then move it forward or back.</p>
+    <div class="tracker-title" id="tracker-title"></div>
+    <div class="stages" id="stages"></div>
+    <div class="tracker-controls">
+      <button class="btn" id="btn-prev">← Previous Stage</button>
+      <button class="btn btn-primary" id="btn-next">Next Stage →</button>
+      <span class="stage-hint" id="stage-hint"></span>
+    </div>
+  </section>
+
+  <!-- 3. SETTINGS -->
+  <section class="section" id="section-settings">
+    <div class="section-head">
+      <div>
+        <div class="kicker">Preferences</div>
+        <h2>Settings</h2>
+      </div>
+    </div>
+    <p class="muted">Customize the look and behavior. Changes apply instantly and reset when you leave the page.</p>
+    <div class="settings-grid">
+      <div class="setting-block">
+        <h3>Theme</h3>
+        <div class="swatches">
+          <div class="swatch swatch-light active" data-theme="light" title="Light"></div>
+          <div class="swatch swatch-midnight" data-theme="midnight" title="Midnight"></div>
+          <div class="swatch swatch-sand" data-theme="sand" title="Sand"></div>
+        </div>
+        <label style="margin-top:10px"><input type="radio" name="theme" value="light" checked> Light (default)</label>
+        <label><input type="radio" name="theme" value="midnight"> Midnight</label>
+        <label><input type="radio" name="theme" value="sand"> Sand &amp; Teal</label>
+      </div>
+      <div class="setting-block">
+        <h3>Display</h3>
+        <label><input type="checkbox" id="opt-dense"> Compact spacing</label>
+        <label><input type="checkbox" id="opt-serif"> Serif typography</label>
+        <label><input type="checkbox" id="opt-notes" checked> Show notes in list</label>
+      </div>
+      <div class="setting-block">
+        <h3>Data</h3>
+        <p class="muted" style="margin-bottom:12px;font-size:12.5px">Restore the original Malaysian sample projects. This clears any edits you made.</p>
+        <button class="btn btn-danger" id="btn-reset">Reset Sample Data</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 id="modal-title">Add Project</h2>
+    <p class="muted" style="margin-bottom:0">Fill in the project details below.</p>
+    <div class="field"><label for="f-name">Project name</label>
+      <input id="f-name" type="text" placeholder="e.g. Kangar Rural Water Supply"></div>
+    <div class="field"><label for="f-loc">Location</label>
+      <input id="f-loc" type="text" placeholder="e.g. Perlis"></div>
+    <div class="field"><label for="f-stage">Current stage</label>
+      <select id="f-stage"></select></div>
+    <div class="field"><label for="f-notes">Notes</label>
+      <textarea id="f-notes" placeholder="Short notes about scope, status or contacts"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn" id="btn-cancel">Cancel</button>
+      <button class="btn btn-primary" id="btn-save">Save Project</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STAGES = [
+    { name:"Feasibility & Survey",  desc:"Site assessment, water source study and community needs review." },
+    { name:"Design & Approvals",    desc:"Engineering drawings, regulatory submissions and permits." },
+    { name:"Procurement",           desc:"Tendering, contractor selection and material ordering." },
+    { name:"Construction",          desc:"Pipelaying, treatment works and pump station installation." },
+    { name:"Testing & Commissioning", desc:"Pressure testing, water quality checks and handover trials." },
+    { name:"Operational Handover",  desc:"Final sign-off, operator training and transition to operations." }
+  ];
+
+  var SAMPLE = [
+    {
+      name:"Klang Valley Non-Revenue Water Reduction",
+      location:"Klang, Selangor",
+      stage:3,
+      notes:"Phase 2 pipe replacement along Jalan Klang Lama; coordination with the state water operator ongoing."
+    },
+    {
+      name:"Kampung Tebakang Gravity-Fed Supply",
+      location:"Bebuloh, Labuan",
+      stage:1,
+      notes:"Gravity-fed system from hillside catchment; survey team scheduled for site confirmation."
+    },
+    {
+      name:"Kota Belud Rural Water Coverage",
+      location:"Kota Belud, Sabah",
+      stage:4,
+      notes:"Tube well drilling completed at Kampung Taun Gusi; treatment works under construction."
+    }
+  ];
+
+  var state = {
+    projects: JSON.parse(JSON.stringify(SAMPLE)),
+    selectedId: 0,
+    editingId: null,
+    showNotes: true
+  };
+
+  // give each project a stable id
+  state.projects.forEach(function(p,i){ p.id = i; });
+  state.nextId = state.projects.length;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var listEl = $("project-list"), stagesEl = $("stages");
+
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function getSelected(){
+    var p = state.projects.filter(function(x){ return x.id === state.selectedId; })[0];
+    if(!p && state.projects.length){ p = state.projects[0]; state.selectedId = p.id; }
+    return p || null;
+  }
+
+  function toast(msg){
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+  }
+
+  /* ---------- Render: project list ---------- */
+  function renderList(){
+    if(!state.projects.length){
+      listEl.innerHTML = '<div class="empty">No projects yet. Click “+ Add Project” to create one.</div>';
+      return;
+    }
+    listEl.innerHTML = state.projects.map(function(p){
+      var sel = p.id === state.selectedId ? " selected" : "";
+      var notesHtml = state.showNotes && p.notes
+        ? '<div class="card-notes">' + esc(p.notes) + '</div>' : "";
+      return '<div class="card' + sel + '" data-id="' + p.id + '" tabindex="0" role="button" aria-pressed="' + (p.id===state.selectedId) + '">' +
+        '<div class="card-body">' +
+          '<div class="card-title">' + esc(p.name) + '</div>' +
+          '<div class="card-loc">📍 ' + esc(p.location) + '</div>' +
+          '<span class="badge">' + esc(STAGES[p.stage].name) + '</span>' +
+          notesHtml +
+        '</div>' +
+        '<div class="card-actions">' +
+          '<button class="btn btn-sm" data-act="edit" data-id="' + p.id + '">Edit</button>' +
+          '<button class="btn btn-sm btn-danger" data-act="delete" data-id="' + p.id + '">Delete</button>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+  }
+
+  /* ---------- Render: stage tracker ---------- */
+  function renderTracker(){
+    var p = getSelected();
+    if(!p){
+      $("tracker-title").innerHTML = "No project selected.";
+      stagesEl.innerHTML = "";
+      $("stage-hint").textContent = "";
+      return;
+    }
+    $("tracker-title").innerHTML =
+      'Tracking: <strong>' + esc(p.name) + '</strong>' +
+      ' <span style="opacity:.7">· ' + esc(p.location) + '</span>';
+
+    stagesEl.innerHTML = STAGES.map(function(s, i){
+      var cls = "stage-row";
+      if(i < p.stage) cls += " stage-done";
+      if(i === p.stage) cls += " stage-current";
+      return '<div class="' + cls + '">' +
+        '<div class="stage-dot">' + (i < p.stage ? "✓" : i + 1) + '</div>' +
+        '<div><div class="stage-name">' + esc(s.name) + '</div>' +
+        '<div class="stage-desc">' + esc(s.desc) + '</div></div>' +
+      '</div>';
+    }).join("");
+
+    var last = p.stage === STAGES.length - 1;
+    $("btn-prev").disabled = p.stage === 0;
+    $("btn-next").disabled = last;
+    $("btn-next").textContent = last ? "Final stage reached" : "Next Stage →";
+    $("stage-hint").textContent = "Stage " + (p.stage + 1) + " of " + STAGES.length;
+  }
+
+  function renderAll(){ renderList(); renderTracker(); }
+
+  /* ---------- Feature 1: editable project data ---------- */
+  var overlay = $("modal-overlay");
+
+  function openModal(editId){
+    state.editingId = (typeof editId === "number") ? editId : null;
+    $("modal-title").textContent = state.editingId === null ? "Add Project" : "Edit Project";
+    $("btn-save").textContent = state.editingId === null ? "Add Project" : "Save Changes";
+
+    var sel = $("f-stage");
+    sel.innerHTML = STAGES.map(function(s,i){
+      return '<option value="' + i + '">' + (i+1) + '. ' + esc(s.name) + '</option>';
+    }).join("");
+
+    if(state.editingId === null){
+      $("f-name").value = ""; $("f-loc").value = ""; $("f-notes").value = ""; sel.value = 0;
+    } else {
+      var p = state.projects.filter(function(x){ return x.id === state.editingId; })[0];
+      $("f-name").value = p.name; $("f-loc").value = p.location;
+      $("f-notes").value = p.notes; sel.value = p.stage;
+    }
+    overlay.classList.add("open");
+    $("f-name").focus();
+  }
+
+  function closeModal(){ overlay.classList.remove("open"); }
+
+  $("btn-add").addEventListener("click", function(){ openModal(null); });
+  $("btn-cancel").addEventListener("click", closeModal);
+  overlay.addEventListener("click", function(e){ if(e.target === overlay) closeModal(); });
+
+  $("btn-save").addEventListener("click", function(){
+    var name = $("f-name").value.trim();
+    var loc  = $("f-loc").value.trim();
+    var notes = $("f-notes").value.trim();
+    var stage = parseInt($("f-stage").value, 10);
+    if(!name){ $("f-name").focus(); toast("Please enter a project name"); return; }
+    if(!loc){ $("f-loc").focus(); toast("Please enter a location"); return; }
+
+    if(state.editingId === null){
+      state.projects.push({ id: state.nextId++, name:name, location:loc, stage:stage, notes:notes });
+      state.selectedId = state.nextId - 1;
+      toast("Project added");
+    } else {
+      var p = state.projects.filter(function(x){ return x.id === state.editingId; })[0];
+      p.name = name; p.location = loc; p.notes = notes; p.stage = stage;
+      state.selectedId = p.id;
+      toast("Project updated");
+    }
+    closeModal();
+    renderAll();
+  });
+
+  // list interactions: select / edit / delete
+  listEl.addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-act]");
+    if(btn){
+      var id = parseInt(btn.dataset.id, 10);
+      if(btn.dataset.act === "edit") openModal(id);
+      if(btn.dataset.act === "delete"){
+        var p = state.projects.filter(function(x){ return x.id === id; })[0];
+        if(confirm('Delete project "' + p.name + '"?')){
+          state.projects = state.projects.filter(function(x){ return x.id !== id; });
+          if(state.selectedId === id) state.selectedId = state.projects.length ? state.projects[0].id : -1;
+          renderAll();
+          toast("Project deleted");
+        }
+      }
+      return;
+    }
+    var card = e.target.closest(".card");
+    if(card){
+      state.selectedId = parseInt(card.dataset.id, 10);
+      renderAll();
+    }
+  });
+  listEl.addEventListener("keydown", function(e){
+    if(e.key === "Enter" || e.key === " "){
+      var card = e.target.closest(".card");
+      if(card){ e.preventDefault(); state.selectedId = parseInt(card.dataset.id, 10); renderAll(); }
+    }
+  });
+
+  /* ---------- Feature 2: stage movement ---------- */
+  $("btn-next").addEventListener("click", function(){
+    var p = getSelected();
+    if(p && p.stage < STAGES.length - 1){
+      p.stage++;
+      renderAll();
+      toast(p.name + " → " + STAGES[p.stage].name);
+    }
+  });
+  $("btn-prev").addEventListener("click", function(){
+    var p = getSelected();
+    if(p && p.stage > 0){
+      p.stage--;
+      renderAll();
+      toast(p.name + " ← " + STAGES[p.stage].name);
+    }
+  });
+
+  /* ---------- Feature 3: customization ---------- */
+  function setTheme(t){
+    document.body.classList.remove("theme-midnight","theme-sand");
+    if(t === "midnight") document.body.classList.add("theme-midnight");
+    if(t === "sand") document.body.classList.add("theme-sand");
+    document.querySelectorAll(".swatch").forEach(function(s){
+      s.classList.toggle("active", s.dataset.theme === t);
+    });
+    var radios = document.querySelectorAll('input[name="theme"]');
+    radios.forEach(function(r){ r.checked = r.value === t; });
+  }
+  document.querySelectorAll(".swatch").forEach(function(s){
+    s.addEventListener("click", function(){ setTheme(s.dataset.theme); });
+  });
+  document.querySelectorAll('input[name="theme"]').forEach(function(r){
+    r.addEventListener("change", function(){ setTheme(r.value); });
+  });
+
+  $("opt-dense").addEventListener("change", function(){
+    document.body.classList.toggle("dense", this.checked);
+  });
+  $("opt-serif").addEventListener("change", function(){
+    document.body.classList.toggle("serif", this.checked);
+  });
+  $("opt-notes").addEventListener("change", function(){
+    state.showNotes = this.checked;
+    renderList();
+  });
+
+  $("btn-reset").addEventListener("click", function(){
+    if(confirm("Reset to the original sample projects? Any edits will be lost.")){
+      state.projects = JSON.parse(JSON.stringify(SAMPLE));
+      state.projects.forEach(function(p,i){ p.id = i; });
+      state.nextId = state.projects.length;
+      state.selectedId = 0;
+      renderAll();
+      toast("Sample data restored");
+    }
+  });
+
+  /* ---------- init ---------- */
+  renderAll();
+})();
+</script>
+</body>
+</html>

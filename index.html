@@ -547,7 +547,8 @@
           } else { showApp(user); }
         } else showAuth();
       });
-      $("btn-google").addEventListener("click",function(){ auth.signInWithPopup(provider); });
+      $("btn-google").addEventListener("click",function(){ auth.signInWithRedirect(provider); });
+      auth.getRedirectResult().catch(function(err){ showAuth(err.message); });
     } else {
       // Demo mode: clicking signs in locally
       $("btn-google").addEventListener("click",function(){
@@ -708,77 +709,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

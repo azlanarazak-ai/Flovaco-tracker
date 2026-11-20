@@ -217,7 +217,7 @@
 <!-- AUTH GATE -->
 <div id="auth-screen">
   <div class="auth-card">
-    <div class="brand-mark" style="background:var(--accent-soft);border-color:var(--accent-soft)">💧</div>
+    <div class="brand-mark" style="background:var(--accent-soft);border-color:var(--accent-soft)">ðŸ’§</div>
     <h1 style="margin-top:14px">Flovaco Sdn Bhd Tracker</h1>
     <div class="sub">Sign in with your Flovaco account to access the shared project tracker.</div>
     <button class="btn-google" id="btn-google">
@@ -231,10 +231,10 @@
 
 <header>
   <div class="wrap brand">
-    <div class="brand-mark">💧</div>
+    <div class="brand-mark">ðŸ’§</div>
     <div>
       <h1>Flovaco Sdn Bhd Tracker</h1>
-      <div class="tagline">Water project delivery tracker · Malaysia</div>
+      <div class="tagline">Water project delivery tracker Â· Malaysia</div>
     </div>
     <div class="header-user" id="header-user" style="display:none">
       <div class="who"><span id="user-name"></span><small id="user-email"></small></div>
@@ -253,7 +253,7 @@
       </div>
       <button class="btn btn-primary" id="btn-add">+ Add Project</button>
     </div>
-    <p class="muted">Shared team data — every edit saves automatically and is visible to all signed-in members.</p>
+    <p class="muted">Shared team data â€” every edit saves automatically and is visible to all signed-in members.</p>
     <div class="project-list" id="project-list"></div>
   </section>
 
@@ -269,8 +269,8 @@
     <div class="tracker-title" id="tracker-title"></div>
     <div class="stages" id="stages"></div>
     <div class="tracker-controls">
-      <button class="btn" id="btn-prev">← Previous Stage</button>
-      <button class="btn btn-primary" id="btn-next">Next Stage →</button>
+      <button class="btn" id="btn-prev">â† Previous Stage</button>
+      <button class="btn btn-primary" id="btn-next">Next Stage â†’</button>
       <span class="stage-hint" id="stage-hint"></span>
     </div>
   </section>
@@ -343,8 +343,8 @@
   "use strict";
 
   /* ============================================================
-     CONFIG — replace the placeholder values below with your real
-     Firebase project keys (Firebase console → Project settings).
+     CONFIG â€” replace the placeholder values below with your real
+     Firebase project keys (Firebase console â†’ Project settings).
      Until then the app runs in LOCAL DEMO MODE (data saved on this
      device only, Google button works with any Google account).
      ============================================================ */
@@ -357,7 +357,7 @@
     appId:             "1:701438833583:web:71936fd836cbbf9f94f55a"
   };
   // Only these email domains may sign in once Firebase is configured:
-  var ALLOWED_DOMAIN = "flovaco.com.my";
+  var ALLOWED_DOMAIN = "";
 
   var CONFIGURED = FIREBASE_CONFIG.apiKey.indexOf("PASTE_") !== 0;
 
@@ -400,7 +400,7 @@
   /* ---------- Renders ---------- */
   function renderList(){
     if(!state.projects.length){
-      $("project-list").innerHTML='<div class="empty">No projects yet. Click “+ Add Project” to create one.</div>';
+      $("project-list").innerHTML='<div class="empty">No projects yet. Click â€œ+ Add Projectâ€ to create one.</div>';
       return;
     }
     $("project-list").innerHTML=state.projects.map(function(p){
@@ -409,7 +409,7 @@
       return '<div class="card'+sel+'" data-id="'+p.id+'" tabindex="0" role="button">'+
         '<div class="card-body">'+
           '<div class="card-title">'+esc(p.name)+'</div>'+
-          '<div class="card-loc">📍 '+esc(p.location)+'</div>'+
+          '<div class="card-loc">ðŸ“ '+esc(p.location)+'</div>'+
           '<span class="badge">'+esc(STAGES[p.stage].name)+'</span>'+notesHtml+
         '</div>'+
         '<div class="card-actions">'+
@@ -424,18 +424,18 @@
       $("tracker-title").innerHTML="No project selected.";
       $("stages").innerHTML=""; $("stage-hint").textContent=""; return;
     }
-    $("tracker-title").innerHTML='Tracking: <strong>'+esc(p.name)+'</strong> <span style="opacity:.7">· '+esc(p.location)+'</span>';
+    $("tracker-title").innerHTML='Tracking: <strong>'+esc(p.name)+'</strong> <span style="opacity:.7">Â· '+esc(p.location)+'</span>';
     $("stages").innerHTML=STAGES.map(function(s,i){
       var cls="stage-row";
       if(i<p.stage)cls+=" stage-done";
       if(i===p.stage)cls+=" stage-current";
-      return '<div class="'+cls+'"><div class="stage-dot">'+(i<p.stage?"✓":i+1)+'</div>'+
+      return '<div class="'+cls+'"><div class="stage-dot">'+(i<p.stage?"âœ“":i+1)+'</div>'+
         '<div><div class="stage-name">'+esc(s.name)+'</div><div class="stage-desc">'+esc(s.desc)+'</div></div></div>';
     }).join("");
     var last=p.stage===STAGES.length-1;
     $("btn-prev").disabled=p.stage===0;
     $("btn-next").disabled=last;
-    $("btn-next").textContent=last?"Final stage reached":"Next Stage →";
+    $("btn-next").textContent=last?"Final stage reached":"Next Stage â†’";
     $("stage-hint").textContent="Stage "+(p.stage+1)+" of "+STAGES.length;
   }
   function renderAll(){ renderList(); renderTracker(); }
@@ -483,7 +483,7 @@
       if(!state.projects.filter(function(x){return x.id===state.selectedId;})[0]&&state.projects.length)
         state.selectedId=state.projects[0].id;
       renderAll();
-    },function(err){ console.warn(err); toast("Sync error — showing local copy"); });
+    },function(err){ console.warn(err); toast("Sync error â€” showing local copy"); });
     state.online=true; setSyncBadge();
   }
 
@@ -524,7 +524,7 @@
       }catch(e){}
       localLoad();
       renderAll();
-      toast("Local demo mode — connect Firebase for team sync");
+      toast("Local demo mode â€” connect Firebase for team sync");
     }
   }
   function showAuth(err){
@@ -630,7 +630,7 @@
     if(p&&p.stage<STAGES.length-1){
       cloudUpdate(p.id,{stage:p.stage+1});
       if(!state.online)renderAll();
-      toast(p.name+" → "+STAGES[p.stage+1].name);
+      toast(p.name+" â†’ "+STAGES[p.stage+1].name);
     }
   });
   $("btn-prev").addEventListener("click",function(){
@@ -638,7 +638,7 @@
     if(p&&p.stage>0){
       cloudUpdate(p.id,{stage:p.stage-1});
       if(!state.online)renderAll();
-      toast(p.name+" ← "+STAGES[p.stage-1].name);
+      toast(p.name+" â† "+STAGES[p.stage-1].name);
     }
   });
 
@@ -708,3 +708,77 @@
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
